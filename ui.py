@@ -10,31 +10,31 @@ THEME_COLOR = "#375362"
 class UI:
     def __init__(self, quiz : QuizBrain):
         self.m_quiz = quiz
-        self.m_currentQuestion = None
 
         self.m_window = tkinter.Tk()
         self.m_window.title("Quizzler")
         self.m_window.config(padx=20, pady=20, bg=THEME_COLOR)
 
-        self.m_score_label = tkinter.Label(text=f"Score: {self.m_quiz.score} / {self.m_quiz.question_number}", fg="white", bg=THEME_COLOR)
+        self.m_score_label = tkinter.Label(text="", fg="white", bg=THEME_COLOR)
         self.m_score_label.grid(row=0, column=1)
         self.display_score()
 
         self.m_canvas = tkinter.Canvas(width=300, height=250, bg="white")
-        self.m_question_text = self.m_canvas.create_text(150, 125, text="[QUESTION HERE]", fill=THEME_COLOR, font=("Arial", 20, "italic"))
+        self.m_question_text = self.m_canvas.create_text(150, 125, width=280, text="[QUESTION HERE]", fill=THEME_COLOR, font=("Arial", 20, "italic"))
         self.m_canvas.grid(row=1, column=0, columnspan=2, pady=50)
 
-        true_img = tkinter.PhotoImage(file="images/true.png")
+        true_img = tkinter.PhotoImage(file="./images/true.png")
         self.m_true_button = tkinter.Button(text="True", highlightthickness=0, command=self.true_button_clicked)
         self.m_true_button.grid(row=2, column=0)
 
-        false_img = tkinter.PhotoImage(file="images/false.png")
+        false_img = tkinter.PhotoImage(file="./images/false.png")
         self.m_false_button = tkinter.Button(text="False", highlightthickness=0, command=self.false_button_clicked)
         self.m_false_button.grid(row=2, column=1)
 
     def next_question(self):
-        self.m_currentQuestion = self.m_quiz.next_question()
-        self.m_canvas.itemconfig(self.m_question_text, text=self.m_currentQuestion.text)
+        current_question = self.m_quiz.next_question()
+        self.m_canvas.itemconfig(self.m_question_text, text=current_question.text)
+        print(f"loaded next: {current_question.text}")
 
     def true_button_clicked(self):
         self.check_answer("True")
@@ -61,7 +61,6 @@ class UI:
                 self.m_quiz.reset()
                 self.m_quiz.load_questions_from_opentdb()
 
-                self.m_currentQuestion = None
                 self.display_score()
 
                 self.next_question()
