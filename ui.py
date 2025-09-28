@@ -11,6 +11,7 @@ class UI:
     def __init__(self, quiz : QuizBrain):
         self.m_quiz = quiz
         self.m_currentQuestion = None
+
         self.m_window = tkinter.Tk()
         self.m_window.title("Quizzler")
         self.m_window.config(padx=20, pady=20, bg=THEME_COLOR)
@@ -30,9 +31,6 @@ class UI:
         false_img = tkinter.PhotoImage(file="images/false.png")
         self.m_false_button = tkinter.Button(text="False", highlightthickness=0, command=self.false_button_clicked)
         self.m_false_button.grid(row=2, column=1)
-
-        # get the next question
-        self.next_question()
 
     def next_question(self):
         self.m_currentQuestion = self.m_quiz.next_question()
@@ -60,13 +58,15 @@ class UI:
         else:
             result = messagebox.askyesno("All Done", f"That was the final question!\nYou scored {self.m_quiz.score} of {self.m_quiz.question_number}\nWould you like to play again?")
             if result:
-                self.m_currentQuestion = None
-
-                self.m_quiz.question_number = 0
-                self.m_quiz.score = 0
-                self.m_quiz.question_list = None
-                self.m_quiz.current_question = None
+                self.m_quiz.reset()
                 self.m_quiz.load_questions_from_opentdb()
+
+                self.m_currentQuestion = None
+                self.display_score()
+
+                self.next_question()
+            else:
+                self.m_window.quit()
 
     def display_score(self):
         self.m_score_label.config(text=f"Score: {self.m_quiz.score} / {self.m_quiz.question_number}")

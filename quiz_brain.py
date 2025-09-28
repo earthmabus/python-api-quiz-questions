@@ -6,6 +6,9 @@ import requests
 class QuizBrain:
 
     def __init__(self):
+        self.reset()
+
+    def reset(self):
         self.question_number = 0
         self.score = 0
         self.question_list = None
