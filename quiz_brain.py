@@ -18,7 +18,8 @@ class QuizBrain:
         self.question_list = []
 
     def load_questions_from_opentdb(self):
-        parameters = {'amount': NUM_QUESTIONS_TO_LOAD, 'type': "boolean"}
+        # category: 18 <-- means computer science questions only... you can remove this parameter
+        parameters = {'amount': NUM_QUESTIONS_TO_LOAD, 'type': "boolean", 'category': 18}
         response = requests.get(url="https://opentdb.com/api.php", params=parameters)
         response.raise_for_status()
 
@@ -39,8 +40,7 @@ class QuizBrain:
 
     def check_answer(self, user_answer):
         retval = False
-        correct_answer = self.current_question.answer
-        if user_answer.lower() == correct_answer.lower():
+        if user_answer.lower() == self.current_question.answer.lower():
             self.score += 1
             return True
 
